@@ -1,0 +1,141 @@
+const lenis = new Lenis({
+    duration: 2,
+});
+
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(false);
+
+lenis.on('scroll', ScrollTrigger.update);
+
+ScrollTrigger.refresh();
+
+gsap.from("#topdiv", {
+    opacity: 0,
+    duration: 1,
+    delay: 0.5,
+    x: 50,
+    stagger: 2,
+    scrollTrigger: {
+        trigger: "#topdiv",
+        scrub: 2,
+        end: "top 30%"
+    }
+});
+
+gsap.from("#botomdiv", {
+    opacity: 0,
+    duration: 1,
+    delay: 0.5,
+    x: -50,
+    stagger: 2,
+    scrollTrigger: {
+        trigger: "#botomdiv",
+        scrub: 2,
+        end: "top 30%"
+    }
+});
+
+gsap.from(".insid", {
+    opacity: 0,
+    duration: 0.8,
+    delay: 0.5,
+    x: -50,
+    stagger: 2,
+    scrollTrigger: {
+        trigger: ".insid",
+        scrub: 2,
+        end: "top 30%"
+    }
+});
+
+gsap.from(".insid2", {
+    opacity: 0,
+    duration: 0.8,
+    delay: 0.5,
+    x: 50,
+    stagger: 2,
+    scrollTrigger: {
+        trigger: ".insid2",
+        scrub: 2,
+        end: "top 30%"
+    }
+});
+
+// ==========================================
+// 🚀 BACKEND CONTACT FORM INTEGRATION
+// ==========================================
+// Automatically detect whether we are on local or production
+const API_BASE_URL = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+    ? '' // Uses current server origin in production & local server
+    : 'http://localhost:5000'; // Fallback if opened via file://
+
+const contactForm = document.getElementById('contact-form');
+const nameInput = document.getElementById('contact-name');
+const emailInput = document.getElementById('contact-email');
+const messageInput = document.getElementById('contact-message');
+const sendBtn = document.getElementById('contact-btn');
+
+function showToast(message, type = 'success') {
+    const toastBox = document.getElementById('toast-box') || document.body;
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+    
+    toastBox.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 400);
+    }, 4500);
+}
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const message = messageInput.value.trim();
+
+        // Client-side validation
+        if (!name || !email || !message) {
+            showToast('Please fill out all fields.', 'error');
+            return;
+        }
+
+        const originalBtnText = sendBtn.innerText;
+        sendBtn.disabled = true;
+        sendBtn.innerText = 'SENDING...';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/contact`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, message })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                showToast(data.message || 'Message sent successfully! 🚀', 'success');
+                contactForm.reset();
+            } else {
+                const errorMsg = data.errors ? data.errors.join(', ') : (data.message || 'Something went wrong.');
+                showToast(errorMsg, 'error');
+            }
+        } catch (err) {
+            console.error('Network Error:', err);
+            showToast('Unable to connect to server. Is backend running on port 5000?', 'error');
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerText = originalBtnText;
+        }
+    });
+}
+
