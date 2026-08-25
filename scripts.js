@@ -64,13 +64,8 @@ gsap.from(".insid2", {
 });
 
 // ==========================================
-// 🚀 BACKEND CONTACT FORM INTEGRATION
+// 🚀 DIRECT EMAIL INTEGRATION (Works 100% on Vercel)
 // ==========================================
-// Automatically detect whether we are on local or production
-const API_BASE_URL = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
-    ? '' // Uses current server origin in production & local server
-    : 'http://localhost:5000'; // Fallback if opened via file://
-
 const contactForm = document.getElementById('contact-form');
 const nameInput = document.getElementById('contact-name');
 const emailInput = document.getElementById('contact-email');
@@ -112,26 +107,31 @@ if (contactForm) {
         sendBtn.innerText = 'SENDING...';
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/contact`, {
+            const response = await fetch('https://formsubmit.co/ajax/utkarshdhakane2@gmail.com', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({ name, email, message })
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    message: message,
+                    _subject: `🚀 New Portfolio Message from ${name}!`
+                })
             });
 
             const data = await response.json();
 
-            if (response.ok && data.success) {
-                showToast(data.message || 'Message sent successfully! 🚀', 'success');
+            if (response.ok) {
+                showToast('Thank you! Your message has been sent to Utkarsh. 🚀', 'success');
                 contactForm.reset();
             } else {
-                const errorMsg = data.errors ? data.errors.join(', ') : (data.message || 'Something went wrong.');
-                showToast(errorMsg, 'error');
+                showToast('Could not send message. Please try again.', 'error');
             }
         } catch (err) {
             console.error('Network Error:', err);
-            showToast('Unable to connect to server. Is backend running on port 5000?', 'error');
+            showToast('Network error. Please try again.', 'error');
         } finally {
             sendBtn.disabled = false;
             sendBtn.innerText = originalBtnText;
