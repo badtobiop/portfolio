@@ -64,6 +64,66 @@ gsap.from(".insid2", {
 });
 
 // ==========================================
+// 🚀 PROJECT DETAILS MODAL INTERACTION
+// ==========================================
+const projectModal = document.getElementById('project-modal');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const habitTrackerCard = document.querySelector('.project-card[data-project="habit-tracker"]');
+
+function openProjectModal() {
+    if (!projectModal) return;
+    projectModal.classList.add('active');
+    projectModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProjectModal() {
+    if (!projectModal) return;
+    projectModal.classList.remove('active');
+    projectModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+const modalContainer = document.querySelector('.modal-container');
+if (modalContainer) {
+    modalContainer.addEventListener('wheel', (e) => {
+        e.stopPropagation();
+    }, { passive: true });
+}
+
+if (habitTrackerCard) {
+    habitTrackerCard.addEventListener('click', (e) => {
+        // If clicking on the direct external link inside the card, let the link open normally
+        if (e.target.closest('.live-btn')) {
+            return;
+        }
+        openProjectModal();
+    });
+
+    habitTrackerCard.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openProjectModal();
+        }
+    });
+}
+
+if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeProjectModal);
+}
+
+if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', closeProjectModal);
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && projectModal && projectModal.classList.contains('active')) {
+        closeProjectModal();
+    }
+});
+
+// ==========================================
 // 🚀 DIRECT EMAIL INTEGRATION (Works 100% on Vercel)
 // ==========================================
 const contactForm = document.getElementById('contact-form');
@@ -76,10 +136,10 @@ function showToast(message, type = 'success') {
     const toastBox = document.getElementById('toast-box') || document.body;
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
     toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
-    
+
     toastBox.appendChild(toast);
 
     setTimeout(() => {
@@ -114,10 +174,13 @@ if (contactForm) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    message: message,
-                    _subject: `🚀 New Portfolio Message from ${name}!`
+                    "Name": name,
+                    "Email": email,
+                    "Message": message,
+                    "_replyto": email,
+                    "_subject": `🚀 Portfolio Message from ${name} (${email})`,
+                    "_template": "table",
+                    "_captcha": "false"
                 })
             });
 
@@ -138,4 +201,9 @@ if (contactForm) {
         }
     });
 }
+
+// Ensure proper trigger recalculation on load
+window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+});
 
