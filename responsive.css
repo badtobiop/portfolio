@@ -178,37 +178,50 @@ header .navigationbar #logo2 a {
 }
 
 #s1home .left-side #hi {
+    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
     font-size: clamp(1.1rem, 2vw, 1.4rem);
-    opacity: 0.8;
+    font-weight: 500;
+    color: #cbd5e1;
     margin-bottom: 8px;
+    letter-spacing: 0.5px;
 }
 
 #s1home .left-side #utkarsh {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: clamp(42px, 6vw, 75px);
-    line-height: 1.1;
-    letter-spacing: 1px;
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(44px, 6.5vw, 78px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+    color: #ffffff;
 }
 
 #s1home .left-side #Dhakane {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: clamp(48px, 7vw, 85px);
-    line-height: 1.1;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(50px, 7.5vw, 88px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 40%, #e2e8f0 70%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 #s1home .left-side #developer {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
     font-size: clamp(13px, 1.5vw, 16px);
-    opacity: 0.6;
-    letter-spacing: 2px;
+    font-weight: 700;
+    color: #ef4444;
+    letter-spacing: 3px;
     margin-bottom: 18px;
+    text-transform: uppercase;
 }
 
 #s1home .left-side #p1 {
+    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
     font-size: clamp(14px, 1.6vw, 17px);
-    color: #b0a8a8;
-    line-height: 1.6;
+    color: #94a3b8;
+    line-height: 1.65;
     margin-bottom: 30px;
 }
 
@@ -1213,12 +1226,44 @@ header .navigationbar #logo2 a {
     margin: 0;
 }
 
-/* Custom note box */
+/* Custom note box & AI Highlight Box */
 .custom-note-box {
     background: rgba(220, 38, 38, 0.08);
     border-left: 3px solid #ef4444;
     border-radius: 10px;
     padding: 14px 18px;
+}
+
+.ai-highlight-box {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.14) 0%, rgba(15, 23, 42, 0.65) 100%);
+    border-left: 3px solid #ef4444;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-top: 1px solid rgba(239, 68, 68, 0.25);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ai-highlight-box .note-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fca5a5;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ai-highlight-box p {
+    font-size: 12.8px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ai-highlight-box p strong {
+    color: #ffffff;
 }
 
 .note-header {
@@ -1236,6 +1281,78 @@ header .navigationbar #logo2 a {
     color: #cbd5e1;
     line-height: 1.5;
     margin: 0;
+}
+
+/* Process Grid (How It Was Built) */
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.process-box {
+    background: rgba(10, 10, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+
+.process-box:hover {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(22, 18, 28, 0.85);
+    transform: translateY(-2px);
+}
+
+.process-step-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 10px;
+    flex-shrink: 0;
+    color: #ef4444;
+    gap: 2px;
+}
+
+.process-step-badge .step-num {
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.process-step-badge i {
+    font-size: 11px;
+}
+
+.process-content strong {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f1f5f9;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.process-content p {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.45;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Modal Bottom Action Bar */
