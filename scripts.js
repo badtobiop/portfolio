@@ -202,8 +202,37 @@ if (contactForm) {
     });
 }
 
+// ==========================================
+// 🚀 SMOOTH SCROLLING (Lenis integration for Buttons & Nav Links)
+// ==========================================
+const viewMyWorkBtn = document.getElementById('b1');
+if (viewMyWorkBtn) {
+    viewMyWorkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const projectSection = document.getElementById('project');
+        if (projectSection) {
+            lenis.scrollTo(projectSection, { offset: -20, duration: 1.4 });
+        }
+    });
+}
+
+// Smooth scroll for all internal anchor links (Home, About Me, Project, Contact, Talk to Me)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+                e.preventDefault();
+                lenis.scrollTo(targetEl, { offset: -20, duration: 1.4 });
+            }
+        }
+    });
+});
+
 // Ensure proper trigger recalculation on load
 window.addEventListener('load', () => {
     ScrollTrigger.refresh();
 });
+
 
