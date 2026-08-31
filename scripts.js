@@ -1,14 +1,38 @@
 const lenis = new Lenis({
-    duration: 2,
+    duration: 1.8,
 });
+
+// Modal Container & Elements
+const projectModal = document.getElementById('project-modal');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalContainer = document.querySelector('.modal-container');
+const modalBody = document.querySelector('.modal-body');
+const habitTrackerCard = document.querySelector('.project-card[data-project="habit-tracker"]');
+
+// Sub-instance of Lenis for buttery-smooth modal scrolling
+let modalLenis = null;
+if (modalContainer) {
+    modalLenis = new Lenis({
+        wrapper: modalContainer,
+        content: modalBody || modalContainer,
+        duration: 1.4,
+        smoothWheel: true,
+        smoothTouch: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+    });
+}
 
 gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
+    if (modalLenis && projectModal && projectModal.classList.contains('active')) {
+        modalLenis.raf(time * 1000);
+    }
 });
 gsap.ticker.lagSmoothing(false);
 
 lenis.on('scroll', ScrollTrigger.update);
-
 ScrollTrigger.refresh();
 
 gsap.from("#topdiv", {
@@ -66,16 +90,19 @@ gsap.from(".insid2", {
 // ==========================================
 // 🚀 PROJECT DETAILS MODAL INTERACTION
 // ==========================================
-const projectModal = document.getElementById('project-modal');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-const modalBackdrop = document.getElementById('modal-backdrop');
-const habitTrackerCard = document.querySelector('.project-card[data-project="habit-tracker"]');
-
 function openProjectModal() {
     if (!projectModal) return;
     projectModal.classList.add('active');
     projectModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    // Pause main page scroll and activate smooth modal scrolling
+    lenis.stop();
+    if (modalLenis) {
+        modalLenis.scrollTo(0, { immediate: true });
+        modalLenis.resize();
+        modalLenis.start();
+    }
 }
 
 function closeProjectModal() {
@@ -83,13 +110,12 @@ function closeProjectModal() {
     projectModal.classList.remove('active');
     projectModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-}
 
-const modalContainer = document.querySelector('.modal-container');
-if (modalContainer) {
-    modalContainer.addEventListener('wheel', (e) => {
-        e.stopPropagation();
-    }, { passive: true });
+    // Stop modal scroll and resume page scroll
+    if (modalLenis) {
+        modalLenis.stop();
+    }
+    lenis.start();
 }
 
 if (habitTrackerCard) {
