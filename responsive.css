@@ -42,7 +42,7 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
+    background:
         radial-gradient(1.5px 1.5px at 25px 35px, rgba(255, 255, 255, 0.9), transparent),
         radial-gradient(2px 2px at 70px 85px, rgba(215, 230, 255, 0.75), transparent),
         radial-gradient(1px 1px at 130px 45px, rgba(255, 255, 255, 0.65), transparent),
@@ -58,8 +58,13 @@ body::after {
 }
 
 @keyframes moonStars {
-    from { transform: translateY(0); }
-    to { transform: translateY(-160px); }
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-160px);
+    }
 }
 
 body::-webkit-scrollbar {
@@ -327,30 +332,51 @@ header .navigationbar #logo2 a {
 }
 
 #s1home #anime #uimg {
-    object-fit: cover;
     position: absolute;
-    border-radius: 25px;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+    /* Mouse events sirf container #anime handle karega */
+}
+
+@property --x {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: -9999px;
+}
+
+@property --y {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: -9999px;
 }
 
 #s1home #anime #uimg2 {
-    object-fit: cover;
+    --x: -9999px;
+    --y: -9999px;
     position: absolute;
-    border-radius: 25px;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    border-radius: 25px;
+    object-fit: cover;
+    z-index: 2;
+    /* Upar rahegi */
     opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-#s1home #anime:hover #uimg2 {
-    opacity: 1;
-    background-color: #101010;
+    /* Shuru me aur mouse bahar hone par gayab rahega */
+    pointer-events: none;
+    /* Mouse events me glitch na ho */
+    /* Deep Dark Red Filter: Dull/Fika look khatam karke rich contrast aur red boost karega */
+    filter: contrast(1.25) saturate(1.45) brightness(0.92);
+    /* Spotlight Mask: Thoda solid spot taaki spotlight ke andar image faint/fika na lage */
+    -webkit-mask-image: radial-gradient(circle at var(--x, -9999px) var(--y, -9999px), black 15px, transparent 100px);
+    mask-image: radial-gradient(circle at var(--x, -9999px) var(--y, -9999px), black 15px, transparent 100px);
 }
 
 /* --- 4. ABOUT ME SECTION (#aboutme) --- */
@@ -612,6 +638,7 @@ header .navigationbar #logo2 a {
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-100%);
     }
@@ -948,8 +975,10 @@ header .navigationbar #logo2 a {
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.95), 0 0 50px rgba(56, 189, 248, 0.12);
     transform: scale(0.92) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
 }
 
 .project-modal.active .modal-container {
@@ -1775,6 +1804,7 @@ header .navigationbar #logo2 a {
         opacity: 0;
         transform: translateY(20px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1790,4 +1820,90 @@ header .navigationbar #logo2 a {
     opacity: 0.6;
     cursor: not-allowed;
     filter: grayscale(0.5);
+}
+
+/* ==========================================================================
+   AMBIENT GLOW CURSOR STYLES (COMPACT & SLEEK)
+   ========================================================================== */
+#cursor-glow-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: opacity 0.3s ease;
+}
+
+/* Side se 30px ka Soft Ambient Moonlight Glow */
+.cursor-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82px; /* 22px ring + 30px side glow */
+    height: 82px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(186, 215, 255, 0.12) 35%, transparent 75%);
+    filter: blur(6px);
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+/* Chota Sleek Transparent Glass Ring (22px) with 30px Glow */
+.cursor-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(1.5px);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 10px rgba(255, 255, 255, 0.25);
+    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+/* Center Dot */
+.cursor-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 6px #ffffff;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Text / Name Hover State: Compact circle (Sirf 38px) */
+#cursor-glow-wrapper.hovering-text .cursor-ring {
+    width: 38px;
+    height: 38px;
+    border-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+#cursor-glow-wrapper.hovering-text .cursor-dot {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+#cursor-glow-wrapper.hovering-text .cursor-aura {
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Mask Image (#anime) ya specified images pe poori tarah gayab */
+#cursor-glow-wrapper.hidden-on-img {
+    opacity: 0 !important;
+    transform: translate(-50%, -50%) scale(0.4) !important;
 }

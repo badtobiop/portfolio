@@ -87,6 +87,61 @@ gsap.from(".insid2", {
     }
 });
 
+//masking 
+// --- Anime Image Mask Effect (Smooth / Slow GSAP Transition) ---
+const animeBox = document.querySelector("#anime");
+const uimg2 = document.querySelector("#uimg2");
+
+if (animeBox && uimg2) {
+    animeBox.addEventListener("mouseenter", function (dets) {
+        const rect = animeBox.getBoundingClientRect();
+        const x = dets.clientX - rect.left;
+        const y = dets.clientY - rect.top;
+
+        // Entry spot par set karo taaki mask dur se fly na kare
+        gsap.set(uimg2, {
+            "--x": x + "px",
+            "--y": y + "px"
+        });
+
+        // Mask ko smoothly fade in karo
+        gsap.to(uimg2, {
+            opacity: 1,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto"
+        });
+    });
+
+    animeBox.addEventListener("mousemove", function (dets) {
+        const rect = animeBox.getBoundingClientRect();
+        const x = dets.clientX - rect.left;
+        const y = dets.clientY - rect.top;
+
+        // Mask ko mouse ke peeche smooth glide karao
+        gsap.to(uimg2, {
+            opacity: 1,
+            "--x": x + "px",
+            "--y": y + "px",
+            duration: 0.8,
+            ease: "power2.out",
+            overwrite: "auto"
+        });
+    });
+
+    animeBox.addEventListener("mouseleave", function () {
+        // Mouse div se bahar jate hi mask turant smooth fade-out (gayab) hoga
+        gsap.to(uimg2, {
+            opacity: 0,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto"
+        });
+    });
+}
+
+
+
 // ==========================================
 // 🚀 PROJECT DETAILS MODAL INTERACTION
 // ==========================================
@@ -262,3 +317,59 @@ window.addEventListener('load', () => {
 });
 
 
+
+
+// ==========================================
+// AMBIENT GLOW CURSOR TRACKER
+// ==========================================
+(function initCursorGlow() {
+    const wrapper = document.getElementById("cursor-glow-wrapper");
+    if (!wrapper) return;
+
+    let isHidden = false;
+
+    // 1. Mouse Follow with GSAP smooth spring easing
+    window.addEventListener("mousemove", function (dets) {
+        gsap.to(wrapper, {
+            x: dets.clientX,
+            y: dets.clientY,
+            opacity: isHidden ? 0 : 1,
+            duration: 0.55,
+            ease: "power2.out",
+            overwrite: "auto"
+        });
+    });
+
+    // Window se bahar jane par gayab
+    document.addEventListener("mouseleave", function () {
+        gsap.to(wrapper, { opacity: 0, duration: 0.3, overwrite: "auto" });
+    });
+
+    // 2. Mask wali Image (#anime) aur images pe GAYAB ho jaye
+    const hiddenTargets = document.querySelectorAll("#anime, #circleimg1, .project-thumb, #uimg, #uimg2");
+    hiddenTargets.forEach(function (el) {
+        el.addEventListener("mouseenter", function () {
+            isHidden = true;
+            wrapper.classList.add("hidden-on-img");
+            gsap.to(wrapper, { opacity: 0, duration: 0.25, overwrite: "auto" });
+        });
+        el.addEventListener("mouseleave", function () {
+            isHidden = false;
+            wrapper.classList.remove("hidden-on-img");
+            gsap.to(wrapper, { opacity: 1, duration: 0.35, overwrite: "auto" });
+        });
+    });
+
+    // 3. Name, Headings, Links, Buttons pe Transparent + Bada Circle
+    const textTargets = "#utkarsh, #Dhakane, #hi, #developer, #p1, .Aboutme1, #span1, #span2, #project-title, #contact-title, a, button, .tag, .proj-btn";
+    document.querySelectorAll(textTargets).forEach(function (el) {
+        el.addEventListener("mouseenter", function () {
+            if (!isHidden) {
+                wrapper.classList.add("hovering-text");
+            }
+        });
+        el.addEventListener("mouseleave", function () {
+            wrapper.classList.remove("hovering-text");
+        });
+    });
+})();
